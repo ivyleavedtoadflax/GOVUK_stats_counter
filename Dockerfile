@@ -1,6 +1,12 @@
 FROM python:3.6
 
-COPY get_count.py get_count.py
+COPY src src
+WORKDIR src
 
-ENTRYPOINT ["python"]
+RUN apt-get update -y && apt-get upgrade -y
+RUN pip3 install -r requirements.txt
+
+ENV LOGFILE /data/govuk_stats_log.json
+
+ENTRYPOINT ["python3"]
 CMD "get_count.py"
