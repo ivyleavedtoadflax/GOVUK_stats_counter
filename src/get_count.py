@@ -1,10 +1,12 @@
 # coding: utf-8
-'''
+
+"""
 GOV.UK statistics count go getter
 
 Scrape the statistics count from the GOV.UK statistics homepage and 
 log it to json for reading by telegraf.
-'''
+"""
+
 import os
 from time import strftime
 from lxml import html
