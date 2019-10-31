@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6-slim-stretch
 
 COPY src src
 WORKDIR src
