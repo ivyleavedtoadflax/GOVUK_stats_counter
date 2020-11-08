@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  govuk_stats_counter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: python3
+    command: get_count.py
+    volumes:
+    - ./data:/data
+    environment:
+     LOGFILE: /data/govuk_stats_log.json
+
