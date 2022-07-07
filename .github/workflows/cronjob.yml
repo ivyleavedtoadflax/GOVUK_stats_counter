@@ -1,6 +1,9 @@
 name: CronJob
 
 on:
+  schedule:
+    # Every 13:00 Monday-Friday
+    - cron: "0 13 * * 1-5"
   workflow_dispatch:
 
 jobs:
@@ -14,8 +17,7 @@ jobs:
 
     - name: Start containers
       run: |
-        docker-compose -f "docker-compose.yaml" up -d --build
-        sleep 10
+        docker-compose -f "docker-compose.yaml" up --build
 
     - uses: EndBug/add-and-commit@v9
       with:
@@ -24,6 +26,6 @@ jobs:
 
     - name: Stop containers
       if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      run: docker-compose -f "docker-compose.yaml" down
 
 
