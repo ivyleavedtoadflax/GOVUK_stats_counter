@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := all
-PYTHON_VERSION := python3.7
+PYTHON_VERSION := python3.8
 
 # Set the default location for the virtualenv to be stored
 
