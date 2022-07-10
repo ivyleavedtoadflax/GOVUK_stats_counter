@@ -2,8 +2,8 @@ name: CronJob
 
 on:
   schedule:
-    # Every 13:00 Monday-Friday
-    - cron: "0 13 * * 1-5"
+    # Every 13:00 Monday
+    - cron: "0 13 * * 1"
   workflow_dispatch:
 
 jobs:
