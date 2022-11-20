@@ -1,18 +1,18 @@
 .DEFAULT_GOAL := all
-PYTHON_VERSION := python3.8
+PYTHON_VERSION := python3.10
 
 # Set the default location for the virtualenv to be stored
 
-VIRTUALENV := build/virtualenv
+VIRTUALENV := .venv
 
 # Create the virtualenv by installing the requirements and test requirements
 
-$(VIRTUALENV)/.installed: src/requirements.txt
+.PHONY: virtualenv
+virtualenv:
 	@if [ -d $(VIRTUALENV) ]; then rm -rf $(VIRTUALENV); fi
 	@mkdir -p $(VIRTUALENV)
 	virtualenv --python $(PYTHON_VERSION) $(VIRTUALENV)
 	$(VIRTUALENV)/bin/pip3 install -r src/requirements.txt
-	touch $@
 
 # Update the requirements to latest. This is required because typically we won't
 # want to incldue test requirements in the requirements of the application, and
@@ -28,8 +28,5 @@ update-requirements-txt:
 	$(VIRTUALENV)/bin/pip3 install -r unpinned_requirements.txt
 	echo "# Created by 'make update-requirements-txt'. DO NOT EDIT!" > src/requirements.txt
 	$(VIRTUALENV)/bin/pip freeze | grep -v pkg-resources==0.0.0 >> src/requirements.txt
-
-.PHONY: virtualenv
-virtualenv: $(VIRTUALENV)/.installed
 
 all: virtualenv
