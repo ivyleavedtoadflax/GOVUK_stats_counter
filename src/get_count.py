@@ -19,16 +19,17 @@ logger = getLogger(__name__)
 
 LOGFILE = os.environ.get("LOGFILE")
 
-gov_url = "https://www.gov.uk/search/research-and-statistics"
-path = '//*[(@id = "js-result-count")]/text()'
+GOV_URL = "https://www.gov.uk/search/research-and-statistics"
+PATH = '//*[(@id = "js-result-count")]/text()'
 try:
-    page = requests.get(gov_url)
+    page = requests.get(GOV_URL, timeout=5)
     tree = html.fromstring(page.content)
-    value = tree.xpath(path)[0]
-    value = re.findall("\d+\,\d+", value)[0]
+    value = tree.xpath(PATH)[0]
+    value = re.findall(r"\d+\,\d+", value)[0]
     value = int(value.replace(",", ""))
     dict_data = {"time": strftime("%Y-%m-%d %H:%M:%S"), "count": int(value)}
     logger.info("GOV.UK statistics value found")
     write_json_log(dict_data, log_file=LOGFILE)
+    page.raise_for_status()
 except Exception:
     logger.exception("Error fetching GOV.UK statistics")
