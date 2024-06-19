@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: python3
-    command: get_count.py
+    entrypoint: poetry run
+    command: python get_count.py
     volumes:
     - ./data:/data
     environment:

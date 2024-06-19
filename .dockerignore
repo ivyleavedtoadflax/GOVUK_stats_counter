@@ -1,0 +1,7 @@
+# Ignore everything
+**
+
+# But not these files/directories
+!src/
+!pyproject.toml
+!data/
