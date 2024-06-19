@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "govuk-stats-counter"
+version = "0.1.0"
+description = ""
+authors = ["Matthew Upson <matt@mantisnlp.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "govuk_stats_counter"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+lxml = "^5.2.2"
+requests = "^2.32.3"
+wasabi = "^1.1.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
