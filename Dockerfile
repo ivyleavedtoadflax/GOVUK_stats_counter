@@ -17,4 +17,4 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 # Install dependencies
 RUN uv sync --frozen
 
-ENV LOGFILE /data/govuk_stats_log.json
+ENV LOGFILE=/data/govuk_stats_log.json

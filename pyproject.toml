@@ -6,7 +6,6 @@ authors = [
     {name = "Matthew Upson", email = "matt@mantisnlp.com"}
 ]
 license = {text = "MIT"}
-readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "lxml>=5.2.2",

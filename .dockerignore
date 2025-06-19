@@ -4,4 +4,6 @@
 # But not these files/directories
 !src/
 !pyproject.toml
+!uv.lock
 !data/
+!README.md
