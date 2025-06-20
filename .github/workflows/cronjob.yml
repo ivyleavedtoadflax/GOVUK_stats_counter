@@ -2,8 +2,8 @@ name: CronJob
 
 on:
   schedule:
-    # Every 13:00 Monday
-    - cron: "0 13 * * 1"
+    # Every 13:00 on the 1st of each month
+    - cron: "0 13 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
 
     - uses: EndBug/add-and-commit@v9
       with:
-        add: '--force data'
+        add: '--force data plots'
         push: true
 
     - name: Stop containers

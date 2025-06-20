@@ -14,13 +14,17 @@ This application:
 - Scrapes the [GOV.UK research and statistics search page](https://www.gov.uk/search/research-and-statistics)
 - Extracts the total count of published statistics
 - Logs timestamped data to a JSON file for tracking trends over time
-- Runs automatically every Monday at 13:00 UTC
+- Runs automatically monthly on the 1st at 13:00 UTC
 
-## 📈 View the Data
+## 📈 Statistics Growth Visualization
+
+![GOV.UK Statistics Count Over Time](plots/statistics.png)
+
+The chart shows the steady growth of GOV.UK statistics publications from **~82k in 2022** to **96k+ in June 2025**.
+
+### View Raw Data
 
 Check the live data: [govuk_stats_log.json](https://github.com/ivyleavedtoadflax/GOVUK_stats_counter/blob/main/data/govuk_stats_log.json)
-
-The data shows the growth of GOV.UK statistics publications from **~92k in July 2024** to **96k+ in June 2025**.
 
 ## 🚀 Quick Start
 
@@ -49,7 +53,7 @@ docker run -v $(pwd)/data:/data -e LOGFILE=/data/govuk_stats_log.json govuk-stat
 
 - **Language**: Python 3.12
 - **Package Manager**: [uv](https://github.com/astral-sh/uv) (fast Python package installer)
-- **Dependencies**: `requests`, `lxml`, `wasabi`
+- **Dependencies**: `requests`, `lxml`, `matplotlib`
 - **Container**: Multi-stage Docker build for efficiency
 - **Automation**: GitHub Actions with scheduled cron jobs
 - **Testing**: Automated CI/CD pipeline with syntax and integration tests
@@ -59,9 +63,12 @@ docker run -v $(pwd)/data:/data -e LOGFILE=/data/govuk_stats_log.json govuk-stat
 ```
 ├── src/
 │   ├── get_count.py          # Main scraper script
-│   └── write_json_log.py     # JSON logging utility
+│   ├── write_json_log.py     # JSON logging utility
+│   └── create_visualization.py # Visualization generator
 ├── data/
 │   └── govuk_stats_log.json  # Time-series data output
+├── plots/
+│   └── statistics.png        # Generated visualization
 ├── .github/workflows/
 │   ├── cronjob.yml          # Weekly data collection
 │   └── test.yml             # CI/CD testing pipeline
@@ -75,11 +82,10 @@ docker run -v $(pwd)/data:/data -e LOGFILE=/data/govuk_stats_log.json govuk-stat
 
 ### Data Extraction
 
-The scraper uses multiple fallback methods to ensure reliability:
+The scraper uses robust dual-method extraction to ensure reliability:
 
 1. **Primary**: Meta tag `<meta name="govuk:search-result-count" content="...">`
 2. **Secondary**: Span element `<span class="js-result-count">X,XXX results</span>`
-3. **Fallback**: Legacy ID-based XPath selector
 
 ### Output Format
 
@@ -111,7 +117,7 @@ uv sync && docker build -t test . && docker run -v $(pwd)/test_data:/data test
 ### CI/CD
 
 - **Automated testing**: Runs on every push and PR
-- **Scheduled collection**: Every Monday at 13:00 UTC
+- **Scheduled collection**: Monthly on the 1st at 13:00 UTC
 - **Docker validation**: Ensures container builds and runs successfully
 
 ## 📜 License

@@ -11,7 +11,7 @@ logger = getLogger(__name__)
 def write_json_log(data, log_file):
     """
     Write log data to csv
-    
+
     Args:
         data (dict): Dict to append to json file.
         log_file (str): Path to data file.
