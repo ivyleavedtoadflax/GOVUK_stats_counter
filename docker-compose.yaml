@@ -1,11 +1,11 @@
-version: '3.8'
+# version: '3.8'  # Obsolete - removed to avoid warnings
 
 services:
   govuk_stats_counter:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: poetry run
+    entrypoint: uv run
     command: python src/get_count.py
     volumes:
     - ./data:/data

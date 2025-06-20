@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+
+    - name: Install dependencies
+      run: uv sync
+
+    - name: Run syntax check
+      run: uv run python -m py_compile src/get_count.py src/write_json_log.py
+
+    - name: Test Docker build
+      run: docker build -t govuk-stats-counter-test .
+
+    - name: Test Docker run
+      run: |
+        mkdir -p test_data
+        echo "Running Docker container..."
+        docker run -v $(pwd)/test_data:/data -e LOGFILE=/data/test_log.json govuk-stats-counter-test
+        
+    - name: Verify output
+      run: |
+        echo "Checking for output file..."
+        ls -la test_data/
+        if [ ! -f test_data/test_log.json ]; then
+          echo "Error: test_log.json was not created"
+          echo "Directory contents:"
+          ls -la test_data/
+          exit 1
+        fi
+        echo "✅ Docker container created output file successfully"
+        echo "File contents:"
+        cat test_data/test_log.json

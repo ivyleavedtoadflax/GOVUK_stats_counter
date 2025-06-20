@@ -20,15 +20,46 @@ logger = getLogger(__name__)
 LOGFILE = os.environ.get("LOGFILE")
 
 gov_url = "https://www.gov.uk/search/research-and-statistics"
-path = '//*[(@id = "js-result-count")]/text()'
+
 try:
     page = requests.get(gov_url)
     tree = html.fromstring(page.content)
-    value = tree.xpath(path)[0]
-    value = re.findall("\d+\,\d+", value)[0]
-    value = int(value.replace(",", ""))
-    dict_data = {"time": strftime("%Y-%m-%d %H:%M:%S"), "count": int(value)}
-    logger.info("GOV.UK statistics value found")
-    write_json_log(dict_data, log_file=LOGFILE)
+    
+    # Try multiple approaches to find the result count
+    value = None
+    
+    # Method 1: Try the meta tag (most reliable)
+    meta_content = tree.xpath('//meta[@name="govuk:search-result-count"]/@content')
+    if meta_content:
+        value = int(meta_content[0])
+        logger.info("Found count in meta tag: %d", value)
+    
+    # Method 2: Try the span with class js-result-count
+    if value is None:
+        span_text = tree.xpath('//span[@class="js-result-count"]/text()')
+        if span_text:
+            # Extract number from text like "96,269 results"
+            numbers = re.findall(r"\d+,?\d+", span_text[0])
+            if numbers:
+                value = int(numbers[0].replace(",", ""))
+                logger.info("Found count in span text: %d", value)
+    
+    # Method 3: Try the old ID-based approach (fallback)
+    if value is None:
+        old_path = '//*[(@id = "js-result-count")]/text()'
+        old_value = tree.xpath(old_path)
+        if old_value:
+            numbers = re.findall(r"\d+,?\d+", old_value[0])
+            if numbers:
+                value = int(numbers[0].replace(",", ""))
+                logger.info("Found count using old method: %d", value)
+    
+    if value is not None:
+        dict_data = {"time": strftime("%Y-%m-%d %H:%M:%S"), "count": value}
+        logger.info("Successfully found GOV.UK statistics count: %d", value)
+        write_json_log(dict_data, log_file=LOGFILE)
+    else:
+        raise ValueError("Could not find result count using any method")
+        
 except Exception:
     logger.exception("Error fetching GOV.UK statistics")
