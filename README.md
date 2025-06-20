@@ -4,8 +4,8 @@ A containerized Python application that automatically tracks the number of stati
 
 ## 📊 Current Status
 
-- **Latest Count**: 96,272+ statistics (as of June 2025)
-- **Data Collection**: Automated weekly via GitHub Actions
+- **Latest Count**: 96,281+ statistics (as of June 2025)
+- **Data Collection**: Automated monthly via GitHub Actions
 - **Status**: ✅ Fully operational
 
 ## 🔍 What it does
@@ -20,7 +20,7 @@ This application:
 
 ![GOV.UK Statistics Count Over Time](plots/statistics.png)
 
-The chart shows the steady growth of GOV.UK statistics publications from **~82k in 2022** to **96k+ in June 2025**.
+The chart shows the steady growth of GOV.UK statistics publications from **~83k in 2022** to **96k+ in June 2025**.
 
 ### View Raw Data
 
@@ -46,14 +46,14 @@ docker-compose up --build
 
 # Or build and run manually
 docker build -t govuk-stats-counter .
-docker run -v $(pwd)/data:/data -e LOGFILE=/data/govuk_stats_log.json govuk-stats-counter
+docker run -v $(pwd)/data:/app/data -v $(pwd)/plots:/app/plots govuk-stats-counter
 ```
 
 ## 🏗️ Architecture
 
 - **Language**: Python 3.12
 - **Package Manager**: [uv](https://github.com/astral-sh/uv) (fast Python package installer)
-- **Dependencies**: `requests`, `lxml`, `matplotlib`
+- **Dependencies**: `requests`, `lxml`, `matplotlib`, `pydantic-settings`
 - **Container**: Multi-stage Docker build for efficiency
 - **Automation**: GitHub Actions with scheduled cron jobs
 - **Testing**: Automated CI/CD pipeline with syntax and integration tests
@@ -64,14 +64,20 @@ docker run -v $(pwd)/data:/data -e LOGFILE=/data/govuk_stats_log.json govuk-stat
 ├── src/
 │   ├── get_count.py          # Main scraper script
 │   ├── write_json_log.py     # JSON logging utility
-│   └── create_visualization.py # Visualization generator
+│   ├── create_visualization.py # Visualization generator
+│   └── config.py            # Pydantic configuration management
 ├── data/
 │   └── govuk_stats_log.json  # Time-series data output
 ├── plots/
 │   └── statistics.png        # Generated visualization
+├── tests/                   # Comprehensive test suite
+│   ├── test_config.py       # Configuration tests
+│   ├── test_visualization.py # Visualization tests
+│   └── test_write_json_log.py # Logging tests
 ├── .github/workflows/
-│   ├── cronjob.yml          # Weekly data collection
-│   └── test.yml             # CI/CD testing pipeline
+│   ├── cronjob.yml          # Monthly data collection
+│   └── test.yml             # CI/CD testing pipeline with ruff & pytest
+├── .pre-commit-config.yaml  # Pre-commit hooks configuration
 ├── Dockerfile               # Container definition
 ├── docker-compose.yaml     # Local development setup
 ├── pyproject.toml          # Python project configuration
@@ -94,9 +100,19 @@ Each entry in the JSON log contains:
 {"time": "2025-06-20 08:54:53", "count": 96272}
 ```
 
-### Environment Variables
+### Configuration
 
-- `LOGFILE`: Path to output JSON file (default: `/data/govuk_stats_log.json`)
+The application uses **pydantic-settings** for robust configuration management:
+
+- **Local Development**: Uses sensible defaults (`data/govuk_stats_log.json`, `plots/statistics.png`)
+- **Docker**: Same paths with volume mounting (`./data:/app/data`, `./plots:/app/plots`)
+- **Environment Variables**: Optional overrides (e.g., `LOGFILE`, `DATETIME_FORMAT`)
+- **Type Safety**: Automatic validation and conversion of configuration values
+
+### Environment Variables (Optional)
+
+- `LOGFILE`: Custom path to output JSON file (default: `data/govuk_stats_log.json`)
+- `DATETIME_FORMAT`: Timestamp format string (default: `%Y-%m-%d %H:%M:%S`)
 - `TZ`: Timezone (set to `Europe/London` in Docker)
 
 ## 🧪 Development
@@ -122,14 +138,16 @@ uv run ruff format src/
 # Test Docker build
 docker build -t govuk-stats-counter-test .
 
-# Test full pipeline
-uv sync && docker build -t test . && docker run -v $(pwd)/test_data:/data test
+# Test Docker setup
+docker-compose up --build
 ```
 
 ### CI/CD
 
 - **Automated testing**: Runs on every push and PR
 - **Scheduled collection**: Monthly on the 1st at 13:00 UTC
+- **Code quality**: Pre-commit hooks with ruff linting and formatting
+- **Testing**: 15 comprehensive tests with pytest
 - **Docker validation**: Ensures container builds and runs successfully
 
 ## 📜 License
@@ -141,7 +159,7 @@ MIT License - see the project for details.
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Ensure tests pass: `uv run python -m py_compile src/*.py`
+4. Ensure tests pass: `uv run pytest`
 5. Submit a pull request
 
 ---
