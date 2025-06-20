@@ -168,18 +168,18 @@ wheels = [
 
 [[package]]
 name = "govuk-stats-counter"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "lxml" },
     { name = "matplotlib" },
+    { name = "pydantic-settings" },
     { name = "requests" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "pre-commit" },
-    { name = "pydantic-settings" },
     { name = "pytest" },
     { name = "ruff" },
 ]
@@ -188,13 +188,13 @@ dev = [
 requires-dist = [
     { name = "lxml", specifier = ">=5.2.2" },
     { name = "matplotlib", specifier = ">=3.7.0" },
+    { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "requests", specifier = ">=2.32.3" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "pre-commit", specifier = ">=3.0.0" },
-    { name = "pydantic-settings", specifier = ">=2.0.0" },
     { name = "pytest", specifier = ">=7.0.0" },
     { name = "ruff", specifier = ">=0.1.0" },
 ]

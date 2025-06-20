@@ -14,6 +14,10 @@ class Config(BaseSettings):
 
     # Data file configuration
     logfile: Path = Field(default=Path("data/govuk_stats_log.json"))
+    datetime_format: str = Field(
+        default="%Y-%m-%d %H:%M:%S",
+        description="Format string for timestamps in log files",
+    )
 
     # Output configuration
     plots_dir: Path = Field(default=Path("plots"))

@@ -42,7 +42,7 @@ try:
                 logger.info("Found count in span text: %d", value)
 
     if value is not None:
-        dict_data = {"time": strftime("%Y-%m-%d %H:%M:%S"), "count": value}
+        dict_data = {"time": strftime(config.datetime_format), "count": value}
         logger.info("Successfully found GOV.UK statistics count: %d", value)
         write_json_log(dict_data, log_file=str(config.logfile))
 

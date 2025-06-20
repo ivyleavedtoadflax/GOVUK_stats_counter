@@ -57,3 +57,21 @@ def test_config_gov_url():
     """Test that gov_url is set correctly."""
     config = Config()
     assert config.gov_url == "https://www.gov.uk/search/research-and-statistics"
+
+
+def test_config_datetime_format():
+    """Test that datetime_format is set correctly."""
+    config = Config()
+    assert config.datetime_format == "%Y-%m-%d %H:%M:%S"
+
+
+def test_config_datetime_format_environment():
+    """Test that datetime_format can be overridden via environment."""
+    custom_format = "%d/%m/%Y %H:%M"
+    os.environ["DATETIME_FORMAT"] = custom_format
+
+    try:
+        config = Config()
+        assert config.datetime_format == custom_format
+    finally:
+        del os.environ["DATETIME_FORMAT"]

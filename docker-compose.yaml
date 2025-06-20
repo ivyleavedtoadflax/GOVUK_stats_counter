@@ -8,7 +8,6 @@ services:
     entrypoint: uv run
     command: python src/get_count.py
     volumes:
-    - ./data:/data
-    environment:
-     LOGFILE: /data/govuk_stats_log.json
+    - ./data:/app/data
+    - ./plots:/app/plots
 

@@ -1,5 +1,8 @@
 FROM python:3.12-slim-bullseye
 
+# Set working directory
+WORKDIR /app
+
 COPY src src
 COPY pyproject.toml .
 COPY uv.lock .
@@ -17,8 +20,6 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 # Install dependencies
 RUN uv sync --frozen
-
-ENV LOGFILE=/data/govuk_stats_log.json
 
 # Set the default command
 ENTRYPOINT ["uv", "run"]

@@ -26,7 +26,7 @@ def load_data(log_file_path: str) -> tuple[list, list]:
             line = line.strip()
             if line:
                 data = json.loads(line)
-                timestamp = datetime.strptime(data["time"], "%Y-%m-%d %H:%M:%S")
+                timestamp = datetime.strptime(data["time"], config.datetime_format)
                 timestamps.append(timestamp)
                 counts.append(data["count"])
 
