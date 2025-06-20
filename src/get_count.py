@@ -2,7 +2,7 @@
 GOV.UK statistics count go getter
 
 Scrape the statistics count from the GOV.UK statistics homepage and
-log it to json for reading by telegraf.
+log it to json.
 """
 
 import re
@@ -12,9 +12,9 @@ from time import strftime
 import requests
 from lxml import html
 
-from config import config
-from create_visualization import main as create_visualization
-from write_json_log import write_json_log
+from src.config import config
+from src.create_visualization import main as create_visualization
+from src.write_json_log import write_json_log
 
 logger = getLogger(__name__)
 

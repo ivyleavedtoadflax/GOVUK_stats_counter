@@ -13,7 +13,7 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
-from config import config
+from src.config import config
 
 
 def load_data(log_file_path: str) -> tuple[list, list]:

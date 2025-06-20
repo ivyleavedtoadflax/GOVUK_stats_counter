@@ -1,24 +1,27 @@
 """Configuration management for GOV.UK statistics counter."""
 
 import os
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
+@dataclass
 class Config:
     """Application configuration with sensible defaults."""
 
-    def __init__(self):
-        # Data file configuration
+    # Scraping configuration
+    gov_url: str = "https://www.gov.uk/search/research-and-statistics"
+
+    # Output configuration
+    plots_dir: Path = field(default_factory=lambda: Path("plots"))
+    plot_filename: str = "statistics.png"
+
+    # Data file configuration (computed from environment)
+    logfile: Path = field(init=False)
+
+    def __post_init__(self):
+        """Initialize computed fields and ensure directories exist."""
         self.logfile = self._get_logfile_path()
-
-        # Scraping configuration
-        self.gov_url = "https://www.gov.uk/search/research-and-statistics"
-
-        # Output configuration
-        self.plots_dir = Path("plots")
-        self.plot_filename = "statistics.png"
-
-        # Ensure output directories exist
         self._ensure_directories()
 
     def _get_logfile_path(self) -> Path:
