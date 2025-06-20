@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from src.config import config
 from src.create_visualization import format_thousands, load_data
 
 
@@ -45,7 +46,7 @@ def test_load_data_valid_file():
         assert counts == [1000, 1100, 1200]
 
         # Check first timestamp
-        expected_dt = datetime.strptime("2022-01-01 12:00:00", "%Y-%m-%d %H:%M:%S")
+        expected_dt = datetime.strptime("2022-01-01 12:00:00", config.datetime_format)
         assert timestamps[0] == expected_dt
     finally:
         Path(temp_file).unlink()
