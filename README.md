@@ -104,8 +104,20 @@ Each entry in the JSON log contains:
 ### Testing
 
 ```bash
-# Run syntax checks
-uv run python -m py_compile src/get_count.py src/write_json_log.py
+# Install development dependencies
+uv sync --dev
+
+# Run all tests
+uv run pytest
+
+# Run tests with verbose output
+uv run pytest -v
+
+# Run syntax checks with ruff
+uv run ruff check src/
+
+# Format code with ruff
+uv run ruff format src/
 
 # Test Docker build
 docker build -t govuk-stats-counter-test .

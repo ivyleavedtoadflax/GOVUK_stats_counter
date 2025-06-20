@@ -17,6 +17,7 @@ dependencies = [
 dev = [
     "pre-commit>=3.0.0",
     "ruff>=0.1.0",
+    "pytest>=7.0.0",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -43,3 +44,15 @@ ignore = []
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+]
+
