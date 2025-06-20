@@ -18,3 +18,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 RUN uv sync --frozen
 
 ENV LOGFILE=/data/govuk_stats_log.json
+
+# Set the default command
+ENTRYPOINT ["uv", "run"]
+CMD ["python", "src/get_count.py"]

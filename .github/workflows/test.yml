@@ -35,13 +35,19 @@ jobs:
     - name: Test Docker run
       run: |
         mkdir -p test_data
+        echo "Running Docker container..."
         docker run -v $(pwd)/test_data:/data -e LOGFILE=/data/test_log.json govuk-stats-counter-test
         
     - name: Verify output
       run: |
+        echo "Checking for output file..."
+        ls -la test_data/
         if [ ! -f test_data/test_log.json ]; then
           echo "Error: test_log.json was not created"
+          echo "Directory contents:"
+          ls -la test_data/
           exit 1
         fi
         echo "✅ Docker container created output file successfully"
+        echo "File contents:"
         cat test_data/test_log.json
